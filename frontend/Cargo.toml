@@ -1,0 +1,11 @@
+[package]
+name = "frontend"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "frontend"
+path = "src/main.rs"
+
+[dependencies]
+leptos = { version = "0.7.8", features = ["csr"] }
