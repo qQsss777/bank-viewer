@@ -1,3 +1,11 @@
-[tasks.trunk]
+[tasks.trunk-dev]
 command = "trunk"
 args = ["serve", "--open"]
+
+[tasks.trunk-build]
+command = "trunk"
+args = ["build", "--release"]
+
+[tasks.fmt]
+command = "leptosfmt"
+args = ["./**/*.rs"]
