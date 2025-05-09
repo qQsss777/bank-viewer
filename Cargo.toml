@@ -1,8 +1,8 @@
 [workspace]  
 members = [  
-    #"auth",  
     #"bank",  
-    "frontend",
+    "frontend", "macro",
+    "user-service",
     #"gateway",
     #"user",
     #"reporting"
