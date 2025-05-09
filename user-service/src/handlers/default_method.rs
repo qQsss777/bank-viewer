@@ -1,5 +1,4 @@
-use axum::response::{Html, IntoResponse};
-
+use axum::{http::StatusCode, response::IntoResponse};
 pub async fn default_method() -> impl IntoResponse {
-    Html("<h1>Méthode non autorisée</h1>")
+    StatusCode::METHOD_NOT_ALLOWED
 }

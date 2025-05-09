@@ -21,3 +21,5 @@ dist
 # Added by cargo
 
 /target
+node_modules
+.env

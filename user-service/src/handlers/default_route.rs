@@ -1,5 +1,4 @@
-use axum::response::{Html, IntoResponse};
-
+use axum::{http::StatusCode, response::IntoResponse};
 pub async fn default_fallback() -> impl IntoResponse {
-    Html("<h1>Route non implémentée</h1>")
+    StatusCode::NOT_FOUND
 }
