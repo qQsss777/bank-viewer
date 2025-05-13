@@ -1,5 +1,12 @@
-use axum::{http::StatusCode, response::IntoResponse};
+use std::sync::Arc;
 
-pub async fn generate_token() -> impl IntoResponse {
+use axum::{Extension, Json, http::StatusCode, response::IntoResponse};
+
+use crate::models::{database::Database, user::CheckUser};
+
+pub fn generate_token(
+    Extension(state): Extension<Arc<Database>>,
+    Json(payload): Json<CheckUser>,
+) -> impl IntoResponse {
     StatusCode::MOVED_PERMANENTLY
 }
