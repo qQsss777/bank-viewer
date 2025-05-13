@@ -1,4 +1,6 @@
-#[derive(Clone)]
+use oul_bank_macro::New;
+
+#[derive(Clone, New)]
 pub struct Database {
     host: String,
     table: String,
@@ -8,15 +10,6 @@ pub struct Database {
 }
 
 impl Database {
-    pub fn new(
-        host: String,
-        table: String,
-        database: String,
-        username: String,
-        password: String,
-    ) -> Database {
-        Database { host, table, database, username, password }
-    }
     pub fn get_connection_string(&self) -> String {
         format!(
             "host={} dbname={} user={} password={}",
@@ -32,7 +25,6 @@ impl Database {
 #[cfg(test)]
 mod tests {
     use super::*;
-
     #[test]
     fn it_works() {
         let result = Database::new(

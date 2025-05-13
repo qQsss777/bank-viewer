@@ -1,13 +1,18 @@
+use oul_bank_macro::New;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, New)]
 pub struct JSONError {
     code: i32,
     message: String,
 }
 
-impl JSONError {
-    pub fn new(code: i32, message: &str) -> Self {
-        JSONError { code: code, message: message.to_string() }
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn it_works() {
+        let err: JSONError = JSONError::new(1, "Error".to_owned());
+        assert_eq!(err.message, "Error");
     }
 }
