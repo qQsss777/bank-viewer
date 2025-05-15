@@ -1,24 +1,29 @@
+mod application;
+mod common;
+mod domains;
 mod handlers;
-mod models;
+mod infrastructure;
 mod routes;
-mod services;
-use std::sync::Arc;
-
+use crate::domains::models::database::Database;
 use dotenv::dotenv;
-use models::database::Database;
+use infrastructure::repositories::user::UserRepositoryPostgres;
 use routes::all_routes;
+use std::env;
+use std::sync::Arc;
 
 #[tokio::main]
 async fn main() {
     dotenv().ok();
-    let db = Database::new(
-        std::env::var("PG_HOST").unwrap(),
-        std::env::var("PG_DATABASE").unwrap(),
-        std::env::var("PG_TABLE").unwrap(),
-        std::env::var("PG_USER").unwrap(),
-        std::env::var("PG_PASSWORD").unwrap(),
-    );
-    let shared_state = Arc::new(db);
+    let db_host: String = env::var("PG_HOST").expect("PG_HOST must be set");
+    let db_schema: String = env::var("PG_SCHEMA").expect("PG_SCHEMA must be set");
+    let db_db = env::var("PG_DATABASE").expect("PG_DATABASE must be set");
+    let db_table = env::var("PG_TABLE").expect("PG_TABLE must be set");
+    let db_user = env::var("PG_USER").expect("PG_USER must be set");
+    let db_password = env::var("PG_PASSWORD").expect("PG_PASSWORD must be set");
+    let db_port = env::var("PG_PORT").expect("PG_PORT must be set");
+    let db = Database::new(db_host, db_schema, db_db, db_table, db_user, db_password, db_port);
+    let user_repo = UserRepositoryPostgres::new(db);
+    let shared_state = Arc::new(user_repo);
     let app = all_routes::all_routes(shared_state);
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3003").await.unwrap();
     axum::serve(listener, app).await.unwrap();

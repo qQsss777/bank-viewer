@@ -1,12 +1,30 @@
 use std::sync::Arc;
 
-use axum::{Extension, Json, http::StatusCode, response::IntoResponse};
+use axum::{Extension, Json, response::IntoResponse};
 
-use crate::models::{database::Database, user::CheckUser};
+use crate::{
+    application::usecases::{base_usecase::BaseUsecase, create_usecase},
+    common::result::JSONResult,
+    domains::{
+        models::user::{CheckUser, CreateUser},
+        repositories::user_repository::UserRepository,
+    },
+};
 
-pub fn generate_token(
-    Extension(state): Extension<Arc<Database>>,
+pub async fn signin(
+    Extension(state): Extension<Arc<dyn UserRepository>>,
     Json(payload): Json<CheckUser>,
 ) -> impl IntoResponse {
-    StatusCode::MOVED_PERMANENTLY
+    Json(JSONResult::new(0, "Echec de l'authentification".to_owned()))
+}
+
+pub async fn create(
+    Extension(state): Extension<Arc<dyn UserRepository>>,
+    Json(payload): Json<CreateUser>,
+) -> impl IntoResponse {
+    let uc = create_usecase::CreateUseCase::new(state);
+    match uc.execute(&payload).await {
+        Ok(_) => Json(JSONResult::new(0, "success".to_string())),
+        Err(_) => Json(JSONResult::new(0, "failed".to_string())),
+    }
 }
