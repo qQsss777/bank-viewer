@@ -1,7 +1,7 @@
-pub trait JWTService {
-    fn check_password(from_db: &String, from_client: &String) -> bool;
-    fn encrypted(password: &String) -> String;
-    fn generate_token() -> String;
-    fn decode_token() -> String;
-    fn unvalidate_token() -> String;
+pub trait JWTService: Send + Sync {
+    fn check_password(&self, from_db: &String, from_client: &String) -> bool;
+    fn encrypted(&self, password: &String) -> String;
+    fn generate_token(&self) -> String;
+    fn decode_token(&self) -> String;
+    fn unvalidate_token(&self) -> String;
 }

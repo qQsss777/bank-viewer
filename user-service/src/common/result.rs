@@ -1,6 +1,7 @@
 use oul_bank_macro::New;
 use serde::{Deserialize, Serialize};
 
+// JSON template result for response
 #[derive(Deserialize, Serialize, New)]
 pub struct JSONResult {
     code: i32,
