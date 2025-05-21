@@ -1,14 +1,11 @@
-use std::sync::Arc;
-
-use crate::{
-    common::result::JSONResult,
-    domains::{
-        models::user::CheckUser, repositories::user_repository::UserRepository,
-        services::jwt::JWTService,
-    },
+use crate::domains::models::token::Token;
+use crate::domains::{
+    models::user::CheckUser, repositories::user_repository::UserRepository,
+    services::jwt::JWTService,
 };
 use async_trait::async_trait;
 use oul_bank_macro::New;
+use std::sync::Arc;
 
 use super::base_usecase::BaseUsecase;
 
@@ -19,10 +16,15 @@ pub struct SignInUseCase {
 }
 
 #[async_trait]
-impl BaseUsecase<CheckUser, Result<String, String>> for SignInUseCase {
-    async fn execute(&self, payload: &CheckUser) -> Result<String, String> {
+impl BaseUsecase<CheckUser, Result<Token, String>> for SignInUseCase {
+    async fn execute(&self, payload: &CheckUser) -> Result<Token, String> {
         let pwd = self.repository.check_user(payload).await?;
-        println!("{}", pwd);
-        Ok("e".to_string())
+        println!("{}, {}", pwd, payload.password);
+        if pwd == payload.password {
+            let token = self.jwt_service.generate_token(&payload.username)?;
+            Ok(token)
+        } else {
+            Err("Echec".to_string())
+        }
     }
 }

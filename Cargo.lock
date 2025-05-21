@@ -2225,9 +2225,12 @@ dependencies = [
  "async-trait",
  "axum",
  "dotenv",
+ "hmac",
  "jwt",
  "oul-bank-macro",
+ "rand",
  "serde",
+ "sha2",
  "tokio",
  "tokio-postgres",
 ]

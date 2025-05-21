@@ -38,6 +38,6 @@ mod tests {
             "Salut".to_owned(),
             "5433".to_owned(),
         );
-        assert_eq!(result.get_table(), "Bonjour.Hi");
+        assert_eq!(result.get_table(), "Schema.Bonjour");
     }
 }

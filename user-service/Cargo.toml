@@ -12,4 +12,7 @@ tokio-postgres = "0.7.13"
 oul-bank-macro = { path = "../macro" }
 jwt = "0.16.0"
 async-trait = "0.1.88"
+rand = "0.9.1"
+hmac = "0.12.1"
+sha2 = "0.10.9"
 
