@@ -1,11 +1,12 @@
 use proc_macro::TokenStream;
 use quote::quote;
-
+/// Implements new constructor to a struct.
+/// Fields are passed by value
 pub fn impl_new(ast: &syn::DeriveInput) -> TokenStream {
     let name = &ast.ident;
     let data = match &ast.data {
         syn::Data::Struct(data) => data,
-        _ => panic!("`Hello` derive only supports structs"),
+        _ => panic!("`New` derive only supports structs"),
     };
 
     let idents: Vec<syn::Ident> =

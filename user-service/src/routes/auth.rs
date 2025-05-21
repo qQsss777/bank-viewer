@@ -1,10 +1,11 @@
 use axum::{Router, routing::post};
 
-use crate::handlers::auth::generate_token;
+use crate::handlers::auth::{create, signin};
 
 pub fn auth_routes() -> Router {
     Router::new()
-        .route("/generateToken", post(generate_token))
-        .route("/revokeToken", post(|| async { "Hello, World!" }))
+        .route("/signin", post(signin))
+        .route("/create-account", post(create))
+        .route("/logout", post(|| async { "Hello, World!" }))
         .route("/validateToken", post(|| async { "Hello, World!" }))
 }
