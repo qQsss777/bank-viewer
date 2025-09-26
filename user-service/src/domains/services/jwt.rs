@@ -5,5 +5,6 @@ pub trait JWTService: Send + Sync {
     fn encrypted(&self, password: &String) -> String;
     fn generate_token(&self, username: &String) -> Result<Token, String>;
     fn decode_token(&self) -> Result<String, String>;
-    fn unvalidate_token(&self) -> Result<String, String>;
+    fn unvalidate_token(&self, token: &String) -> Result<String, String>;
+    fn validate_token(&self, token: &String) -> Result<String, String>;
 }

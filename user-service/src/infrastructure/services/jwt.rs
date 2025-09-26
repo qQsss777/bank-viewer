@@ -1,7 +1,7 @@
 use crate::domains::models::token::Token;
 use crate::domains::services::jwt::JWTService;
 use hmac::{Hmac, Mac};
-use jwt::SignWithKey;
+use jwt::{AlgorithmType, Header, JoseHeader, SignWithKey, VerifyWithKey};
 use oul_bank_macro::New;
 use sha2::Sha384;
 use std::collections::BTreeMap;
@@ -24,7 +24,6 @@ impl JWTService for JWTServiceImpl {
     fn generate_token(&self, username: &String) -> Result<Token, String> {
         let key: Hmac<Sha384> =
             Hmac::new_from_slice(self.secret.as_bytes()).map_err(|e| e.to_string())?;
-        println!("{}", self.secret);
         let mut claims = BTreeMap::new();
         claims.insert("sub", username);
         let iat: u128 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
@@ -38,7 +37,15 @@ impl JWTService for JWTServiceImpl {
         Ok(String::new())
     }
 
-    fn unvalidate_token(&self) -> Result<String, String> {
+    fn unvalidate_token(&self, token: &String) -> Result<String, String> {
         Ok(String::new())
+    }
+
+    fn validate_token(&self, token_str: &String) -> Result<String, String> {
+        let key: Hmac<Sha384> =
+            Hmac::new_from_slice(self.secret.as_bytes()).map_err(|e| e.to_string())?;
+        let _token: jwt::Token<Header, BTreeMap<String, String>, _> =
+            token_str.verify_with_key(&key).map_err(|e| e.to_string())?;
+        Ok("success".to_string())
     }
 }

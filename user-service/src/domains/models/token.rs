@@ -7,6 +7,11 @@ pub struct Token {
     created_at: u128,
 }
 
+#[derive(Deserialize, Serialize, New)]
+pub struct TokenToValidate {
+    pub token: String,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -14,5 +19,8 @@ mod tests {
     fn it_works() {
         let token: Token = Token::new("ffrfr".to_owned(), 1747841406596);
         assert_eq!(token.token, "ffrfr");
+
+        let token_validate: TokenToValidate = TokenToValidate::new("aaaa".to_owned());
+        assert_eq!(token_validate.token, "aaaa")
     }
 }

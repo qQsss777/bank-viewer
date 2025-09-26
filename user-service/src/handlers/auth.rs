@@ -1,8 +1,13 @@
 use crate::{
     AppState,
-    application::usecases::{base_usecase::BaseUsecase, create_usecase, signin_usecase},
+    application::usecases::{
+        base_usecase::BaseUsecase, create_usecase, signin_usecase, validate_usecase,
+    },
     common::result::JSONResult,
-    domains::models::user::{CheckUser, CreateUser},
+    domains::models::{
+        token::TokenToValidate,
+        user::{CheckUser, CreateUser},
+    },
 };
 use axum::{Extension, Json, http::StatusCode, response::IntoResponse};
 
@@ -44,5 +49,23 @@ pub async fn create(
             Json(JSONResult::new("error".to_owned(), "failed".to_string())),
         )
             .into_response(),
+    }
+}
+
+pub async fn validate_token(
+    Extension(state): Extension<AppState>,
+    Json(payload): Json<TokenToValidate>,
+) -> impl IntoResponse {
+    let uc: validate_usecase::ValidateTokenUsecase =
+        validate_usecase::ValidateTokenUsecase::new(state.auth_service);
+    match uc.execute_sync(&payload) {
+        Ok(_) => {
+            (StatusCode::OK, Json(JSONResult::new("success".to_owned(), "token valid".to_string())))
+                .into_response()
+        }
+        Err(e) => {
+            (StatusCode::OK, Json(JSONResult::new("error".to_owned(), "token invalid".to_string())))
+                .into_response()
+        }
     }
 }

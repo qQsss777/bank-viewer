@@ -19,7 +19,6 @@ pub struct SignInUseCase {
 impl BaseUsecase<CheckUser, Result<Token, String>> for SignInUseCase {
     async fn execute(&self, payload: &CheckUser) -> Result<Token, String> {
         let pwd = self.repository.check_user(payload).await?;
-        println!("{}, {}", pwd, payload.password);
         if pwd == payload.password {
             let token = self.jwt_service.generate_token(&payload.username)?;
             Ok(token)
