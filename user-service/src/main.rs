@@ -1,15 +1,12 @@
 mod application;
 mod common;
 mod domains;
-mod handlers;
 mod infrastructure;
-mod routes;
 mod tools;
 use crate::domains::models::database::Database;
 use dotenv::dotenv;
 use infrastructure::repositories::user::UserRepositoryPostgres;
 use infrastructure::services::jwt::JWTServiceImpl;
-use routes::all_routes;
 use std::env;
 use std::sync::Arc;
 
@@ -35,11 +32,11 @@ async fn main() {
     //create repo and service for injection dependencies through state
     let user_repo = Arc::new(UserRepositoryPostgres::new(db));
     let secret_key = tools::random::generate_random_string(32);
-    let auth_service = Arc::new(JWTServiceImpl::new(secret_key.to_owned()));
+    let auth_service = Arc::new(JWTServiceImpl::new(secret_key.to_owned(), Vec::new()));
     let shared_state: AppState = AppState { user_repo, auth_service };
 
     // create and start app
-    let app = all_routes::all_routes(shared_state);
+    let app = application::routes::all_routes::all_routes(shared_state);
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3003").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }

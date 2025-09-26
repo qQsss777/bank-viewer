@@ -10,6 +10,7 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 #[derive(New)]
 pub struct JWTServiceImpl {
     secret: String,
+    black_list: Vec<String>,
 }
 
 impl JWTService for JWTServiceImpl {
@@ -37,11 +38,15 @@ impl JWTService for JWTServiceImpl {
         Ok(String::new())
     }
 
-    fn unvalidate_token(&self, token: &String) -> Result<String, String> {
-        Ok(String::new())
+    fn unvalidate_token(&mut self, token_str: &String) -> String {
+        self.black_list.push(token_str.to_owned());
+        "Success".to_string()
     }
 
     fn validate_token(&self, token_str: &String) -> Result<String, String> {
+        //check if token is black_list
+
+        //get token object and get date
         let key: Hmac<Sha384> =
             Hmac::new_from_slice(self.secret.as_bytes()).map_err(|e| e.to_string())?;
         let _token: jwt::Token<Header, BTreeMap<String, String>, _> =

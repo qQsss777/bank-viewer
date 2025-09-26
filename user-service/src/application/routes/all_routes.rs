@@ -1,7 +1,8 @@
-use crate::AppState;
-use crate::handlers::default_method::default_method;
-use crate::handlers::default_route::default_fallback;
-use crate::routes::auth::auth_routes;
+use crate::{
+    AppState,
+    application::handlers::{default_method::default_method, default_route::default_fallback},
+    application::routes::auth::auth_routes,
+};
 use axum::{Extension, Router};
 
 pub fn all_routes(state: AppState) -> Router {
