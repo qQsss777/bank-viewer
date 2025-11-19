@@ -1,11 +1,11 @@
-use crate::domains::models::token::Token;
 use crate::domains::services::jwt::JWTService;
+use crate::domains::value_objects::token::Token;
 use hmac::{Hmac, Mac};
-use jwt::{AlgorithmType, Header, JoseHeader, SignWithKey, VerifyWithKey};
+use jwt::{Header, SignWithKey, VerifyWithKey};
 use oul_bank_macro::New;
 use sha2::Sha384;
 use std::collections::BTreeMap;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(New)]
 pub struct JWTServiceImpl {
@@ -38,9 +38,11 @@ impl JWTService for JWTServiceImpl {
         Ok(String::new())
     }
 
-    fn unvalidate_token(&mut self, token_str: &String) -> String {
-        self.black_list.push(token_str.to_owned());
-        "Success".to_string()
+    fn unvalidate_token(&mut self, token_str: &String) -> bool {
+        if !self.black_list.contains(token_str) {
+            self.black_list.push(token_str.to_owned());
+        }
+        true
     }
 
     fn validate_token(&self, token_str: &String) -> Result<String, String> {

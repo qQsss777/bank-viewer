@@ -1,4 +1,4 @@
-use crate::domains::models::user::{CheckUser, CreateUser};
+use crate::domains::entities::user::{CheckUser, CreateUser};
 use async_trait::async_trait;
 
 #[async_trait]

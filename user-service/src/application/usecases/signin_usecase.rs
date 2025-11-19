@@ -1,6 +1,6 @@
-use crate::domains::models::token::Token;
+use crate::domains::value_objects::token::Token;
 use crate::domains::{
-    models::user::CheckUser, repositories::user_repository::UserRepository,
+    entities::user::CheckUser, repositories::user_repository::UserRepository,
     services::jwt::JWTService,
 };
 use async_trait::async_trait;

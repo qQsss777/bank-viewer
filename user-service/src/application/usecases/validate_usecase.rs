@@ -1,6 +1,6 @@
 use crate::application::usecases::base_usecase::BaseUsecase;
-use crate::domains::models::token::TokenToValidate;
 use crate::domains::services::jwt::JWTService;
+use crate::domains::value_objects::token::TokenToValidate;
 use oul_bank_macro::New;
 use std::sync::Arc;
 

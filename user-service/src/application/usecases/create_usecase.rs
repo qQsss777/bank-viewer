@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use crate::{
     common::result::JSONResult,
-    domains::{models::user::CreateUser, repositories::user_repository::UserRepository},
+    domains::{entities::user::CreateUser, repositories::user_repository::UserRepository},
 };
 use async_trait::async_trait;
 use oul_bank_macro::New;

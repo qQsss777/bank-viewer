@@ -1,7 +1,6 @@
 use axum::{Router, routing::post};
 
-use crate::application::handlers::auth::{create, signin, validate_token};
-
+use crate::framework::controllers::auth::{create, signin, validate_token};
 pub fn auth_routes() -> Router {
     Router::new()
         .route("/signin", post(signin))

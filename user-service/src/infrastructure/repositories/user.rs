@@ -3,11 +3,9 @@ use oul_bank_macro::New;
 use tokio_postgres::NoTls;
 
 use crate::domains::{
-    models::{
-        database::Database,
-        user::{CheckUser, CreateUser},
-    },
+    entities::user::{CheckUser, CreateUser},
     repositories::user_repository::UserRepository,
+    value_objects::database::Database,
 };
 #[derive(New)]
 pub struct UserRepositoryPostgres {

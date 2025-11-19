@@ -1,13 +1,13 @@
 use crate::{
-    AppState,
     application::usecases::{
         base_usecase::BaseUsecase, create_usecase, signin_usecase, validate_usecase,
     },
     common::result::JSONResult,
-    domains::models::{
-        token::TokenToValidate,
-        user::{CheckUser, CreateUser},
+    domains::{
+        entities::user::{CheckUser, CreateUser},
+        value_objects::token::TokenToValidate,
     },
+    framework::state::state::AppState,
 };
 use axum::{Extension, Json, http::StatusCode, response::IntoResponse};
 
