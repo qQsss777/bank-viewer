@@ -1,6 +1,6 @@
 mod application;
 mod common;
-mod domains;
+mod domain;
 mod framework;
 mod infrastructure;
 mod tools;

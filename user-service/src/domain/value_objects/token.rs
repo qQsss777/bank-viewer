@@ -1,13 +1,13 @@
 use oul_bank_macro::New;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, New)]
+#[derive(Deserialize, Serialize, Clone, New)]
 pub struct Token {
     token: String,
     created_at: u128,
 }
 
-#[derive(Deserialize, Serialize, New)]
+#[derive(Deserialize, Serialize, Clone, New)]
 pub struct TokenToValidate {
     pub token: String,
 }

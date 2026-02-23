@@ -1,8 +1,16 @@
 use std::sync::Arc;
 
+use argon2::password_hash::SaltString;
+use base64::{Engine as _, engine::general_purpose};
+use rand::RngCore;
+use rand::rngs::OsRng;
+
 use crate::{
-    domains::value_objects::database::Database,
-    infrastructure::{repositories::user::UserRepositoryPostgres, services::jwt::JWTServiceImpl},
+    domain::value_objects::{database::Database, error::PasswordHashError},
+    infrastructure::{
+        repositories::user::UserRepositoryPostgres,
+        services::{hash_password::HashPasswordServiceImpl, jwt::JWTServiceImpl},
+    },
     tools::random::generate_random_string,
 };
 
@@ -12,7 +20,7 @@ pub struct AppState {
     pub auth_service: Arc<JWTServiceImpl>,
 }
 
-pub async fn create_state() -> AppState {
+pub async fn create_state() -> Arc<AppState> {
     let db = Database::new(
         std::env::var("PG_HOST").unwrap(),
         std::env::var("PG_SCHEMA").unwrap(),
@@ -22,9 +30,14 @@ pub async fn create_state() -> AppState {
         std::env::var("PG_PASSWORD").unwrap(),
         std::env::var("PG_PORT").unwrap(),
     );
-    //create repo and service for injection dependencies through state
-    let user_repo = Arc::new(UserRepositoryPostgres::new(db));
+    let mut salt_bytes = [0u8; 16];
+    let mut rng = OsRng;
+    rng.fill_bytes(&mut salt_bytes);
+    let salt =
+        SaltString::encode_b64(&salt_bytes).map_err(|_| PasswordHashError::HashFailed).unwrap();
+    let password_hasher = Arc::new(HashPasswordServiceImpl { salt });
+    let user_repo = Arc::new(UserRepositoryPostgres::new(password_hasher, db));
     let secret_key = generate_random_string(32);
-    let auth_service = Arc::new(JWTServiceImpl::new(secret_key.to_owned(), Vec::new()));
-    AppState { user_repo, auth_service }
+    let auth_service = Arc::new(JWTServiceImpl::new(secret_key.to_owned()));
+    Arc::new(AppState { user_repo, auth_service })
 }

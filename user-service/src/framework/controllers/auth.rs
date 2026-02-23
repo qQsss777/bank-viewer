@@ -1,12 +1,12 @@
+use std::sync::Arc;
+
 use crate::{
-    application::usecases::{
-        base_usecase::BaseUsecase, create_usecase, signin_usecase, validate_usecase,
+    application::{
+        dto::user_dto::CreateUserDTO,
+        usecases::{base_usecase::BaseUsecase, create_usecase, signin_usecase, validate_usecase},
     },
     common::result::JSONResult,
-    domains::{
-        entities::user::{CheckUser, CreateUser},
-        value_objects::token::TokenToValidate,
-    },
+    domain::value_objects::{token::TokenToValidate, user::CheckUser},
     framework::state::state::AppState,
 };
 use axum::{Extension, Json, http::StatusCode, response::IntoResponse};
@@ -16,29 +16,31 @@ use axum::{Extension, Json, http::StatusCode, response::IntoResponse};
 /// - `Extension(state)`: shared application state (e.g., repositories, services)
 /// - `Json(payload)`: the incoming JSON body, deserialized into a CheckUser struct
 pub async fn signin(
-    Extension(state): Extension<AppState>,
+    Extension(state): Extension<Arc<AppState>>,
     Json(payload): Json<CheckUser>,
 ) -> impl IntoResponse {
-    let uc = signin_usecase::SignInUseCase::new(state.user_repo, state.auth_service);
+    let uc: signin_usecase::SignInUseCase =
+        signin_usecase::SignInUseCase::new(state.user_repo.clone(), state.auth_service.clone());
     match uc.execute(&payload).await {
         Ok(data) => (StatusCode::OK, Json(data)).into_response(),
         Err(_) => (
             StatusCode::UNAUTHORIZED,
-            Json(JSONResult::new("error".to_owned(), "Echec de l'authentification".to_owned())),
+            Json(JSONResult::new("error".to_owned(), "Authentification failed".to_owned())),
         )
             .into_response(),
     }
 }
 
-/// This is an asynchronous handler function for the "/signin" endpoint.
+/// This is an asynchronous handler function for the "/create-account" endpoint.
 /// It takes two extracted arguments from the request:
 /// - `Extension(state)`: shared application state (e.g., repositories, services)
-/// - `Json(payload)`: the incoming JSON body, deserialized into a CreateUser struct
+/// - `Json(payload)`: the incoming JSON body, deserialized into a User struct
 pub async fn create(
-    Extension(state): Extension<AppState>,
-    Json(payload): Json<CreateUser>,
+    Extension(state): Extension<Arc<AppState>>,
+    Json(payload): Json<CreateUserDTO>,
 ) -> impl IntoResponse {
-    let uc = create_usecase::CreateUseCase::new(state.user_repo);
+    let uc: create_usecase::CreateUseCase =
+        create_usecase::CreateUseCase::new(state.user_repo.clone());
     match uc.execute(&payload).await {
         Ok(_) => {
             (StatusCode::OK, Json(JSONResult::new("success".to_owned(), "success".to_string())))
@@ -46,12 +48,16 @@ pub async fn create(
         }
         Err(_) => (
             StatusCode::UNAUTHORIZED,
-            Json(JSONResult::new("error".to_owned(), "failed".to_string())),
+            Json(JSONResult::new("error".to_owned(), "failed to create user".to_string())),
         )
             .into_response(),
     }
 }
 
+/// This is a synchronous handler function for the "/valiodate" endpoint.
+/// It takes two extracted arguments from the request:
+/// - `Extension(state)`: shared application state (e.g., repositories, services)
+/// - `Json(payload)`: the incoming JSON body, deserialized into a Token struct
 pub async fn validate_token(
     Extension(state): Extension<AppState>,
     Json(payload): Json<TokenToValidate>,

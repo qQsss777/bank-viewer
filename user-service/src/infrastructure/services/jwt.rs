@@ -1,5 +1,5 @@
-use crate::domains::services::jwt::JWTService;
-use crate::domains::value_objects::token::Token;
+use crate::application::services::token::TokenService;
+use crate::domain::value_objects::token::Token;
 use hmac::{Hmac, Mac};
 use jwt::{Header, SignWithKey, VerifyWithKey};
 use oul_bank_macro::New;
@@ -10,18 +10,9 @@ use std::time::{SystemTime, UNIX_EPOCH};
 #[derive(New)]
 pub struct JWTServiceImpl {
     secret: String,
-    black_list: Vec<String>,
 }
 
-impl JWTService for JWTServiceImpl {
-    fn check_password(&self, from_db: &String, from_client: &String) -> bool {
-        true
-    }
-
-    fn encrypted(&self, password: &String) -> String {
-        String::new()
-    }
-
+impl TokenService for JWTServiceImpl {
     fn generate_token(&self, username: &String) -> Result<Token, String> {
         let key: Hmac<Sha384> =
             Hmac::new_from_slice(self.secret.as_bytes()).map_err(|e| e.to_string())?;
@@ -38,17 +29,7 @@ impl JWTService for JWTServiceImpl {
         Ok(String::new())
     }
 
-    fn unvalidate_token(&mut self, token_str: &String) -> bool {
-        if !self.black_list.contains(token_str) {
-            self.black_list.push(token_str.to_owned());
-        }
-        true
-    }
-
     fn validate_token(&self, token_str: &String) -> Result<String, String> {
-        //check if token is black_list
-
-        //get token object and get date
         let key: Hmac<Sha384> =
             Hmac::new_from_slice(self.secret.as_bytes()).map_err(|e| e.to_string())?;
         let _token: jwt::Token<Header, BTreeMap<String, String>, _> =

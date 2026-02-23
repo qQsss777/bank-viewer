@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use crate::{
-    common::result::JSONResult,
-    domains::{entities::user::CreateUser, repositories::user_repository::UserRepository},
+    application::dto::user_dto::CreateUserDTO,
+    domain::{entities::user::User, repositories::user_repository::UserRepository},
 };
 use async_trait::async_trait;
 use oul_bank_macro::New;
@@ -15,8 +15,9 @@ pub struct CreateUseCase {
 }
 
 #[async_trait]
-impl BaseUsecase<CreateUser, Result<(), String>> for CreateUseCase {
-    async fn execute(&self, payload: &CreateUser) -> Result<(), String> {
-        self.repository.create_user(payload).await
+impl BaseUsecase<CreateUserDTO, Result<(), String>> for CreateUseCase {
+    async fn execute(&self, payload: &CreateUserDTO) -> Result<(), String> {
+        let mut user = User::try_from(payload).map_err(|e| e.to_string())?;
+        self.repository.create_user(&mut user).await
     }
 }

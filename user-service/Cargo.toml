@@ -12,11 +12,12 @@ tokio-postgres = "0.7.13"
 oul-bank-macro = { path = "../macro" }
 jwt = "0.16.0"
 async-trait = "0.1.88"
-rand = "0.9.1"
+rand = "0.8.0"
 hmac = "0.12.1"
 sha2 = "0.10.9"
 tower-http = { version = "0.6.6", features = ["fs"] }
-bcrypt = "0.17.1"
+argon2 = "0.5.3"
+base64 = "0.22.1"
 
 [[bin]]
 name = "service"

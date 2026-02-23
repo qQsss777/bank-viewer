@@ -36,10 +36,19 @@ paths:
                 properties:
                   access_token:
                     type: string
-                  refresh_token:
+                  created_at:
                     type: string
         "401":
           description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
 
   /auth/create-account:
     post:
@@ -65,8 +74,26 @@ paths:
       responses:
         "201":
           description: Account created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
         "400":
           description: Invalid input or account already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
 
   /auth/logout:
     post:
@@ -75,6 +102,15 @@ paths:
       responses:
         "200":
           description: User logged out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
 
   /auth/validate-token:
     post:
@@ -99,35 +135,19 @@ paths:
               schema:
                 type: object
                 properties:
-                  valid:
-                    type: boolean
+                  status:
+                    type: string
+                  message:
+                    type: string
         "401":
           description: Token invalid or expired
-  
-  /auth/unvalidate-token:
-    post:
-      summary: Unvalidate an authentication token
-      operationId: unValidateToken
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - token
-              properties:
-                token:
-                  type: string
-      responses:
-        "200":
-          description: Token is unvalided
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  valid:
-                    type: boolean
-        "401":
-          description: Token invalided
+                  status:
+                    type: string
+                  message:
+                    type: string
+  

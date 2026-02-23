@@ -1,6 +1,6 @@
 [tasks.service-dev]
 command = "cargo"
-args = ["watch", "-x", "run --bin service"]
+args = ["watch", "-x", "run --bin service --verbose"]
 
 [tasks.docs-dev]
 command = "cargo"

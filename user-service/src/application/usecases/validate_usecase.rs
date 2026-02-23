@@ -1,12 +1,12 @@
+use crate::application::services::token::TokenService;
 use crate::application::usecases::base_usecase::BaseUsecase;
-use crate::domains::services::jwt::JWTService;
-use crate::domains::value_objects::token::TokenToValidate;
+use crate::domain::value_objects::token::TokenToValidate;
 use oul_bank_macro::New;
 use std::sync::Arc;
 
 #[derive(New)]
 pub struct ValidateTokenUsecase {
-    jwt_service: Arc<dyn JWTService + Send + Sync>,
+    jwt_service: Arc<dyn TokenService + Send + Sync>,
 }
 
 impl BaseUsecase<TokenToValidate, Result<String, String>> for ValidateTokenUsecase {

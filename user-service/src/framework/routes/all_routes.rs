@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::framework::{
     controllers::{default_method::default_method, default_route::default_fallback},
     middlewares::cors::cors_middleware,
@@ -6,7 +8,7 @@ use crate::framework::{
 };
 use axum::{Extension, Router, middleware};
 
-pub fn all_routes(state: AppState) -> Router {
+pub fn all_routes(state: Arc<AppState>) -> Router {
     Router::new()
         .nest("/auth", auth_routes())
         .fallback(default_fallback)
