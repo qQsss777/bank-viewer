@@ -1,11 +1,10 @@
 openapi: 3.1.0
 info:
-  title: Auth API
+  title: bank viever API
   version: 1.0.0
 
 servers:
-  - url: http://localhost:1003
-
+  - url: http://localhost:8003
 paths:
   /auth/signin:
     post:
@@ -130,45 +129,6 @@ paths:
       responses:
         "200":
           description: Token is valid
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  message:
-                    type: string
-        "401":
-          description: Token invalid or expired
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  message:
-                    type: string
-  
-  /auth/whois:
-    post:
-      summary: Get username from an authentication token
-      operationId: whoIs
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - token
-              properties:
-                token:
-                  type: string
-      responses:
-        "200":
-          description: Username
           content:
             application/json:
               schema:

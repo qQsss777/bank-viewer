@@ -3,7 +3,10 @@ use std::sync::Arc;
 use crate::{
     application::{
         dto::user_dto::CreateUserDTO,
-        usecases::{base_usecase::BaseUsecase, create_usecase, signin_usecase, validate_usecase},
+        usecases::{
+            base_usecase::BaseUsecase, create_usecase, get_username, signin_usecase,
+            validate_usecase,
+        },
     },
     common::result::JSONResult,
     domain::value_objects::{token::TokenToValidate, user::CheckUser},
@@ -54,16 +57,16 @@ pub async fn create(
     }
 }
 
-/// This is a synchronous handler function for the "/valiodate" endpoint.
+/// This is a synchronous handler function for the "/validate" endpoint.
 /// It takes two extracted arguments from the request:
 /// - `Extension(state)`: shared application state (e.g., repositories, services)
 /// - `Json(payload)`: the incoming JSON body, deserialized into a Token struct
 pub async fn validate_token(
-    Extension(state): Extension<AppState>,
+    Extension(state): Extension<Arc<AppState>>,
     Json(payload): Json<TokenToValidate>,
 ) -> impl IntoResponse {
     let uc: validate_usecase::ValidateTokenUsecase =
-        validate_usecase::ValidateTokenUsecase::new(state.auth_service);
+        validate_usecase::ValidateTokenUsecase::new(state.auth_service.clone());
     match uc.execute_sync(&payload) {
         Ok(_) => {
             (StatusCode::OK, Json(JSONResult::new("success".to_owned(), "token valid".to_string())))
@@ -73,5 +76,24 @@ pub async fn validate_token(
             (StatusCode::OK, Json(JSONResult::new("error".to_owned(), "token invalid".to_string())))
                 .into_response()
         }
+    }
+}
+
+/// This is a synchronous handler function for the "/whois" endpoint.
+/// It takes two extracted arguments from the request:
+/// - `Extension(state)`: shared application state (e.g., repositories, services)
+/// - `Json(payload)`: the incoming JSON body, deserialized into a Token struct
+pub async fn who_is(
+    Extension(state): Extension<Arc<AppState>>,
+    Json(payload): Json<TokenToValidate>,
+) -> impl IntoResponse {
+    let uc: get_username::GetUsernameUseCase =
+        get_username::GetUsernameUseCase::new(state.auth_service.clone());
+    match uc.execute_sync(&payload) {
+        Ok(username) => {
+            (StatusCode::OK, Json(JSONResult::new("success".to_owned(), username))).into_response()
+        }
+        Err(e) => (StatusCode::OK, Json(JSONResult::new("error".to_owned(), "failed".to_string())))
+            .into_response(),
     }
 }

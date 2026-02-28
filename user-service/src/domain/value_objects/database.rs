@@ -28,7 +28,7 @@ impl Database {
 mod tests {
     use super::*;
     #[test]
-    fn it_works() {
+    fn create_db() {
         let result = Database::new(
             "Hello".to_owned(),
             "Schema".to_owned(),

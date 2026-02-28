@@ -30,7 +30,7 @@ impl User {
 mod tests {
     use super::*;
     #[test]
-    fn it_works() {
+    fn create_user() {
         let bdd_user: User = User::new(
             None,
             "firstname".to_owned(),

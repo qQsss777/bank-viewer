@@ -12,7 +12,7 @@ pub struct JSONResult {
 mod tests {
     use super::*;
     #[test]
-    fn it_works() {
+    fn create_json_result() {
         let err: JSONResult = JSONResult::new("success".to_owned(), "Error".to_owned());
         assert_eq!(err.message, "Error");
     }

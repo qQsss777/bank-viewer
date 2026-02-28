@@ -3,8 +3,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Clone, New)]
 pub struct Token {
-    token: String,
-    created_at: u128,
+    pub token: String,
+    pub created_at: u128,
 }
 
 #[derive(Deserialize, Serialize, Clone, New)]
@@ -16,7 +16,7 @@ pub struct TokenToValidate {
 mod tests {
     use super::*;
     #[test]
-    fn it_works() {
+    fn test_token() {
         let token: Token = Token::new("ffrfr".to_owned(), 1747841406596);
         assert_eq!(token.token, "ffrfr");
 
