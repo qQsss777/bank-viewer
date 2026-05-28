@@ -1,5 +1,5 @@
 [package]
-name = "user-service"
+name = "bank-service"
 version = "0.1.0"
 edition = "2024"
 
@@ -10,19 +10,13 @@ serde = {version = "1.0.219", features = ["derive"] }
 tokio = { version = "1.45.0", features = ["macros", "rt-multi-thread", "signal"] }
 tokio-postgres = "0.7.13"
 oul-bank-macro = { path = "../macro" }
-jwt = "0.16.0"
 async-trait = "0.1.88"
-rand = "0.8.0"
-hmac = "0.12.1"
-sha2 = "0.10.9"
 tower-http = { version = "0.6.6", features = ["fs"] }
-argon2 = "0.5.3"
-base64 = "0.22.1"
 
 [[bin]]
-name = "user-service"
+name = "bank-service"
 path = "src/main.rs"
 
 [[bin]]
-name = "user-docs"
+name = "bank-docs"
 path = "docs/main.rs"

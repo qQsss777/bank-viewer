@@ -1,0 +1,16 @@
+[tasks.service-dev]
+command = "cargo"
+args = ["watch", "-x", "run --bin bank-service --verbose"]
+
+[tasks.docs-dev]
+command = "cargo"
+args = ["watch", "-x", "run --bin bank-docs"]
+
+[tasks.dev]
+description = "Run Service + Doc server"
+script_runner = "bash"
+script = [
+  "cargo watch -x 'run --bin bank-service' | sed 's/^/[SERVICE] /' &",
+  "cargo watch -x 'run --bin bank-docs'    | sed 's/^/[DOCS]    /' &",
+  "wait"
+]

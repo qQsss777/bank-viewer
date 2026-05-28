@@ -1,6 +1,6 @@
 [workspace]  
 members = [  
-    #"bank",  
+    "bank-service",  
     "frontend",
     "macro",
     "user-service",

@@ -172,6 +172,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "bank-service"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "axum",
+ "dotenv",
+ "oul-bank-macro",
+ "serde",
+ "tokio",
+ "tokio-postgres",
+ "tower-http",
+]
+
+[[package]]
 name = "base64"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
